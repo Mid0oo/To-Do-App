@@ -82,7 +82,7 @@ fun ListCardPreview(
     ){
         ListCard(
             title = "Work List",
-            label = Labels.Other,
+            label = Labels.Personal,
         )
     }
 

@@ -43,7 +43,7 @@ fun ListAndPinned(
             .height(47.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .fillMaxWidth()
-            .background(Color.Gray),
+            .background(Color(0xFFE5E5E5)),
         verticalAlignment = Alignment.CenterVertically,
 
     ){
@@ -67,7 +67,7 @@ fun ListAndPinned(
             {
                 Text(
                     text = if (tab == TodoTabs.All) "All List" else "Pinned",
-                    color = if (selectedTab == tab) Color.White else Color.Black,
+                    color = if (selectedTab == tab) Color.White else Color.Gray,
                     fontFamily = Graphik,
                     fontWeight = FontWeight.Medium,
                     )

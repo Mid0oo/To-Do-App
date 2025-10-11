@@ -1,39 +1,66 @@
 package com.example.to_doapp.ui.screens.homescreen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.mytrainning.R
+import com.example.to_doapp.data.TodoEntity
 import com.example.to_doapp.ui.TodoTabs
+import com.example.to_doapp.ui.components.EmptyState
 import com.example.to_doapp.ui.components.ListAndPinned
+import com.example.to_doapp.ui.components.ListCard
 import com.example.to_doapp.ui.components.LogoAndSearch
 import com.example.to_doapp.ui.components.NewListButton
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    viewModel: HomeViewModel = hiltViewModel(),
 ){
+    val state = viewModel.state.collectAsState()
+    val selectedTab = viewModel.selectedTab.collectAsState()
+
+
+    HomeScreenContent(
+        allTodos = state.value.todoList,
+        pinnedTodos = state.value.pinnedList,
+        onSelectedTab = {viewModel.onSelectedTab(it)},
+        selectedTab = selectedTab.value
+    )
+
+}
+@Composable
+fun HomeScreenContent(
+    allTodos: List<TodoEntity>,
+    pinnedTodos: List<TodoEntity>,
+    onSelectedTab: (TodoTabs) -> Unit,
+    selectedTab: TodoTabs,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .statusBarsPadding(),
         contentPadding = PaddingValues(
             horizontal = 24.dp,
             vertical = 24.dp
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
+    ) {
         item {
             LogoAndSearch(
                 modifier = Modifier
@@ -42,23 +69,68 @@ fun HomeScreen(
         }
         item {
             ListAndPinned(
-                onSelectedTab = {},
-                selectedTab = TodoTabs.All
+                onSelectedTab = { onSelectedTab(it) },
+                selectedTab = selectedTab,
             )
         }
+        when (selectedTab) {
+            TodoTabs.All -> {
+                if (allTodos.isEmpty()) {
+                    item {
+                        EmptyState(
+                            imageRes = R.drawable.all_empty,
+                            message = "Ooops! You don't have any list",
+                        )
+                        NewListButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                        )
+                    }
+                } else {
+                    items(allTodos) {
+                        ListCard(
+                            title = it.title,
+                            label = it.label,
+                        )
 
-        item {
-            NewListButton(
-                onClick = {},
-                modifier = Modifier
-                    .padding(top = 24.dp)
+                    }
 
-            )
+                }
+            }
+            TodoTabs.Pinned -> {
+                if (pinnedTodos.isEmpty()) {
+                    item {
+                        EmptyState(
+                            imageRes = R.drawable.pinned_empty,
+                            message = "Ooops! You don't have any pinned list",
+                        )
+                        NewListButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .padding(top = 24.dp)
+                        )
+
+                    }
+                } else {
+                    items(pinnedTodos) {
+                        ListCard(
+                            title = it.title,
+                            label = it.label,
+                        )
+                    }
+                }
+            }
         }
     }
 }
 @Preview
 @Composable
 fun HomeScreenPreview(){
-    HomeScreen()
+    HomeScreenContent(
+        allTodos = emptyList(),
+        pinnedTodos = emptyList(),
+        onSelectedTab = {},
+        selectedTab = TodoTabs.All
+    )
 }

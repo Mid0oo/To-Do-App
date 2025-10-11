@@ -10,7 +10,7 @@ data class TodoEntity(
     val id: Int = 0,
     val title: String,
     val task: String,
-    //val label: Labels,
+    val label: Labels,
     val isPinned: Boolean = false,
     val isDone: Boolean = false,
     val date: Long = System.currentTimeMillis()
