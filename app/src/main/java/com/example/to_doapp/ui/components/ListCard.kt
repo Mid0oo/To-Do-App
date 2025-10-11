@@ -2,6 +2,7 @@ package com.example.to_doapp.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import com.example.to_doapp.ui.theme.Graphik
 fun ListCard(
     title: String,
     label: Labels,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
 
@@ -34,6 +36,7 @@ fun ListCard(
             .clip(shape = RoundedCornerShape(16.dp))
             .background(label.color)
             .border(shape = RoundedCornerShape(16.dp), color = Color.Black, width = 2.dp)
+            .clickable { onClick() }
             .padding(horizontal = 22.dp)
             .padding(vertical = 17.dp),
         horizontalAlignment = Alignment.Start,
@@ -66,11 +69,21 @@ fun ListCard(
         }
     }
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun ListCardPreview(){
-    ListCard(
-        title = "Work",
-        label = Labels.Personal,
-    )
+fun ListCardPreview(
+    modifier: Modifier = Modifier
+){
+    Box(
+        modifier = modifier
+            .padding(horizontal = 24.dp)
+            .background(Color.White)
+
+    ){
+        ListCard(
+            title = "Work List",
+            label = Labels.Other,
+        )
+    }
+
 }

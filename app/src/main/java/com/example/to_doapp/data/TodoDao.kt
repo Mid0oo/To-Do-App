@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoDao {
     @Query("SELECT * FROM todo_table")
-    suspend fun getAllTodos(): List<TodoEntity>
+    fun getAllTodos(): Flow<List<TodoEntity>>
 
     @Query("SELECT * FROM todo_table WHERE isPinned = 1 ")
-    suspend fun getPinnedTodos(): Flow<TodoEntity>
-
+    fun getPinnedTodos(): Flow<List<TodoEntity>>
     @Query("SELECT * FROM todo_table WHERE title LIKE :query")
     fun getTodoBySearch(query: String): Flow<List<TodoEntity>>
 

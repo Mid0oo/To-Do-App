@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.to_doapp.ui.Labels
 import com.example.to_doapp.ui.theme.Graphik
 
@@ -30,41 +32,64 @@ fun LabelSection(
     modifier: Modifier = Modifier
 ){
     val labels = Labels.entries.toList()
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
     ) {
-        labels.forEach { label ->
-            val isSelected = label == selectedLabel
-            val backgroundColor by animateColorAsState(
-                targetValue = if (isSelected) Color.Black else Color(0xFFBFBFBF),
-                label = "bgAnim"
-            )
-            Box(
-                modifier = Modifier
-                    .height(28.dp)
-                    .clip(shape = RoundedCornerShape(6.dp))
-                    .background(color = backgroundColor)
-                    .clickable { onSelectedLabel(label) },
-                contentAlignment = Alignment.Center,
+        Box(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(Color(0xFFDADADA))
+        )
+        Text(
+            text = "Choose a Label",
+            color = Color.Black,
+            fontFamily = Graphik,
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(vertical = 30.dp)
 
-            ) {
-                Text(
-                    text = label.labelName,
-                    color = Color.White,
-                    fontFamily = Graphik,
-                    fontWeight = FontWeight.Medium,
+        )
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            labels.forEach { label ->
+                val isSelected = label == selectedLabel
+                val backgroundColor by animateColorAsState(
+                    targetValue = if (isSelected) Color.Black else Color(0xFFBFBFBF),
+                    label = "bgAnim"
+                )
+                Box(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
+                        .height(28.dp)
+                        .clip(shape = RoundedCornerShape(6.dp))
+                        .background(color = backgroundColor)
+                        .clickable { onSelectedLabel(label) },
+                    contentAlignment = Alignment.Center,
+
+                    ) {
+                    Text(
+                        text = label.labelName,
+                        color = Color.White,
+                        fontFamily = Graphik,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
 
                     )
-            }
+                }
 
+            }
         }
+
     }
+
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LabelSectionPreview(){
     LabelSection(
