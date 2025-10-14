@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mytrainning.R
 import com.example.to_doapp.data.TodoEntity
+import com.example.to_doapp.data.TodoWithTasks
 import com.example.to_doapp.ui.TodoTabs
 import com.example.to_doapp.ui.components.EmptyState
 import com.example.to_doapp.ui.components.ListAndPinned
@@ -44,8 +45,8 @@ fun HomeScreen(
 }
 @Composable
 fun HomeScreenContent(
-    allTodos: List<TodoEntity>,
-    pinnedTodos: List<TodoEntity>,
+    allTodos: List<TodoWithTasks>,
+    pinnedTodos: List<TodoWithTasks>,
     onSelectedTab: (TodoTabs) -> Unit,
     selectedTab: TodoTabs,
     modifier: Modifier = Modifier
@@ -79,19 +80,22 @@ fun HomeScreenContent(
                     item {
                         EmptyState(
                             imageRes = R.drawable.all_empty,
-                            message = "Ooops! You don't have any list",
+                            message = "Oops! You don't have any list",
+                            modifier = Modifier
+                                .padding(top = 24.dp)
                         )
                         NewListButton(
                             onClick = {},
                             modifier = Modifier
                                 .padding(top = 24.dp)
+
                         )
                     }
                 } else {
                     items(allTodos) {
                         ListCard(
-                            title = it.title,
-                            label = it.label,
+                            title = it.todo.title,
+                            label = it.todo.label,
                         )
 
                     }
@@ -103,7 +107,7 @@ fun HomeScreenContent(
                     item {
                         EmptyState(
                             imageRes = R.drawable.pinned_empty,
-                            message = "Ooops! You don't have any pinned list",
+                            message = "Oops! You don't have any pinned list",
                         )
                         NewListButton(
                             onClick = {},
@@ -115,8 +119,8 @@ fun HomeScreenContent(
                 } else {
                     items(pinnedTodos) {
                         ListCard(
-                            title = it.title,
-                            label = it.label,
+                            title = it.todo.title,
+                            label = it.todo.label,
                         )
                     }
                 }

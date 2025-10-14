@@ -27,11 +27,17 @@ import com.example.to_doapp.ui.theme.Graphik
 
 @Composable
 fun LabelSection(
-    selectedLabel: Labels,
-    onSelectedLabel: (Labels) -> Unit,
+    selectedLabel: String,
+    onSelectedLabel: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
-    val labels = Labels.entries.toList()
+    val labels = listOf(
+        Labels.PERSONAL,
+        Labels.WORK,
+        Labels.FINANCE,
+        Labels.OTHER
+    )
+
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -73,7 +79,7 @@ fun LabelSection(
 
                     ) {
                     Text(
-                        text = label.labelName,
+                        text = label,
                         color = Color.White,
                         fontFamily = Graphik,
                         fontWeight = FontWeight.Medium,
@@ -93,7 +99,7 @@ fun LabelSection(
 @Composable
 fun LabelSectionPreview(){
     LabelSection(
-        selectedLabel = Labels.Work,
+        selectedLabel = Labels.WORK,
         onSelectedLabel = {}
     )
 }

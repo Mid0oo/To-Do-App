@@ -100,7 +100,7 @@ fun TaskScreen(
             }
         }
         LabelSection(
-            selectedLabel = Labels.Work,
+            selectedLabel = Labels.WORK,
             onSelectedLabel = {},
             )
 

@@ -25,16 +25,17 @@ import com.example.to_doapp.ui.theme.Graphik
 @Composable
 fun ListCard(
     title: String,
-    label: Labels,
+    label: String,
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
+    val labelColor = Labels.getColor(label)
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(16.dp))
-            .background(label.color)
+            .background(labelColor)
             .border(shape = RoundedCornerShape(16.dp), color = Color.Black, width = 2.dp)
             .clickable { onClick() }
             .padding(horizontal = 22.dp)
@@ -58,7 +59,7 @@ fun ListCard(
 
         ) {
             Text(
-                text = label.labelName,
+                text = label,
                 color = Color.White,
                 fontFamily = Graphik,
                 fontWeight = FontWeight.Medium,
@@ -82,7 +83,7 @@ fun ListCardPreview(
     ){
         ListCard(
             title = "Work List",
-            label = Labels.Personal,
+            label = Labels.WORK,
         )
     }
 

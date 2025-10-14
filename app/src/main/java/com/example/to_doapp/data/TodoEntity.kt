@@ -9,10 +9,7 @@ data class TodoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
-    val task: String,
-    val label: Labels,
+    val label: String = Labels.OTHER,
     val isPinned: Boolean = false,
-    val isDone: Boolean = false,
     val date: Long = System.currentTimeMillis()
-
 )
