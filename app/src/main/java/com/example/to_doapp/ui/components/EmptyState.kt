@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,7 +34,8 @@ fun EmptyState(
             contentScale = ContentScale.Crop,
             contentDescription = "Empty List",
             modifier = Modifier
-                .padding(vertical = 50.dp)
+                .fillMaxWidth()
+                .padding(bottom = 90.dp)
         )
         Text(
             text = message,

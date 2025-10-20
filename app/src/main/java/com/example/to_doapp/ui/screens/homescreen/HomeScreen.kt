@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,7 +58,6 @@ fun HomeScreenContent(
             .background(Color.White)
             .statusBarsPadding(),
         contentPadding = PaddingValues(
-            horizontal = 24.dp,
             vertical = 24.dp
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,12 +66,15 @@ fun HomeScreenContent(
             LogoAndSearch(
                 modifier = Modifier
                     .padding(bottom = 40.dp)
+                    .padding(horizontal = 24.dp)
             )
         }
         item {
             ListAndPinned(
                 onSelectedTab = { onSelectedTab(it) },
                 selectedTab = selectedTab,
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
             )
         }
         when (selectedTab) {
@@ -80,14 +83,15 @@ fun HomeScreenContent(
                     item {
                         EmptyState(
                             imageRes = R.drawable.all_empty,
-                            message = "Oops! You don't have any list",
+                            message = stringResource(R.string.oops_you_don_t_have_any_list),
                             modifier = Modifier
-                                .padding(top = 24.dp)
+                                .padding(top = 100.dp)
+
                         )
                         NewListButton(
                             onClick = {},
                             modifier = Modifier
-                                .padding(top = 24.dp)
+                                //.padding(top = 26.dp)
 
                         )
                     }
@@ -96,6 +100,7 @@ fun HomeScreenContent(
                         ListCard(
                             title = it.todo.title,
                             label = it.todo.label,
+                            onClick = {it.todo.id}
                         )
 
                     }
@@ -121,6 +126,7 @@ fun HomeScreenContent(
                         ListCard(
                             title = it.todo.title,
                             label = it.todo.label,
+                            onClick = {it.todo.id}
                         )
                     }
                 }

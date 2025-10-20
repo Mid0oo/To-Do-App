@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">To-Do App</string>
+    <string name="oops_you_don_t_have_any_list">Oops! You don\'t have any list...</string>
 </resources>
