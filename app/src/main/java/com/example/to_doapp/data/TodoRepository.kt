@@ -6,11 +6,15 @@ interface TodoRepository {
     fun getAllTodos(): Flow<List<TodoWithTasks>>
     fun getPinnedTodos(): Flow<List<TodoWithTasks>>
     fun getTodoBySearch(query: String): Flow<List<TodoWithTasks>>
-    suspend fun insertTodo(todo: TodoEntity)
+
+    fun getTodoById(id: Long): Flow<List<TodoWithTasks>>
+
+    suspend fun insertTodo(todo: TodoEntity) : Long
 
     suspend fun deleteTodo(todo: TodoEntity)
 
-    suspend fun insertTask(task: TaskEntity)
+    suspend fun insertTask(task: TaskEntity) : Long
+
 
     suspend fun deleteTask(task: TaskEntity)
 }

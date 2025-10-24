@@ -44,6 +44,7 @@ fun SearchBox(
         Icon(
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = "Search",
+            tint = Color.Black,
 
         )
         BasicTextField(

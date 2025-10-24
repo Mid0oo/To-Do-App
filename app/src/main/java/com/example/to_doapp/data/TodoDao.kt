@@ -19,11 +19,18 @@ interface TodoDao {
     @Query("SELECT * FROM todo_table WHERE title LIKE :query")
     fun getTodoBySearch(query: String): Flow<List<TodoWithTasks>>
 
-    @Upsert
-    suspend fun insertTodo(todo: TodoEntity)
+    @Transaction
+    @Query("SELECT * FROM todo_table WHERE id = :id")
+    fun getTodoById(id: Long): Flow<List<TodoWithTasks>>
+
 
     @Upsert
-    suspend fun insertTask(task: TaskEntity)
+    suspend fun insertTodo(todo: TodoEntity) : Long
+
+
+    @Upsert
+    suspend fun insertTask(task: TaskEntity) : Long
+
 
     @Delete
     suspend fun deleteTodo(todo: TodoEntity)

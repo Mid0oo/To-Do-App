@@ -12,11 +12,13 @@ class TodoRepositoryImpl(
 
     override fun getTodoBySearch(query: String): Flow<List<TodoWithTasks>> = dao.getTodoBySearch(query)
 
-    override suspend fun insertTodo(todo: TodoEntity) = dao.insertTodo(todo)
+    override fun getTodoById(id: Long): Flow<List<TodoWithTasks>> = dao.getTodoById(id)
+
+    override suspend fun insertTodo(todo: TodoEntity) : Long = dao.insertTodo(todo)
 
     override suspend fun deleteTodo(todo: TodoEntity) = dao.deleteTodo(todo)
 
-    override suspend fun insertTask(task: TaskEntity) = dao.insertTask(task)
+    override suspend fun insertTask(task: TaskEntity) : Long = dao.insertTask(task)
 
     override suspend fun deleteTask(task: TaskEntity) = dao.deleteTask(task)
 
