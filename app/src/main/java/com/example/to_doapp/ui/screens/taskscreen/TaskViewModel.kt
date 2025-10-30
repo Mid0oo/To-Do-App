@@ -23,12 +23,17 @@ class TaskViewModel @Inject constructor(
 
 
     fun loadTodo(id: Long) {
-        viewModelScope.launch {
-            repository.getTodoById(id).collect { todo ->
-                val todo = todo.firstOrNull()?.toUi()
-                _state.update { it.copy(todo = todo) }
+        try {
+            viewModelScope.launch {
+                repository.getTodoById(id).collect { todo ->
+                    val todo = todo.firstOrNull()?.toUi()
+                    _state.update { it.copy(todo = todo) }
+                }
             }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
+
     }
 
     fun addTask() {
@@ -39,45 +44,68 @@ class TaskViewModel @Inject constructor(
             title = "",
             isDone = false
         )
-        viewModelScope.launch {
-            repository.insertTask(newTask.toEntity())
+        try {
+            viewModelScope.launch {
+                repository.insertTask(newTask.toEntity())
+            }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
     }
 
     fun updateTask(task: TaskUi) {
-        viewModelScope.launch {
-            state.value.todo?.let { todo ->
-                val updatedTasks = todo.tasks.map {
-                    if (it.id == task.id) task else it
+        try {
+            viewModelScope.launch {
+                state.value.todo?.let { todo ->
+                    val updatedTasks = todo.tasks.map {
+                        if (it.id == task.id) task else it
+                    }
+                    _state.update { it.copy(todo = todo.copy(tasks = updatedTasks)) }
                 }
-                _state.update { it.copy(todo = todo.copy(tasks = updatedTasks)) }
+                repository.insertTask(task.toEntity())
             }
-            repository.insertTask(task.toEntity())
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
+
     }
 
     fun pinTodo() {
         val todo = state.value.todo ?: return
-        viewModelScope.launch {
-            val updatedTodo = todo.copy(isPinned = !todo.isPinned)
-            repository.insertTodo(updatedTodo.toEntity())
-            _state.update { it.copy(todo = updatedTodo) }
+        try {
+            viewModelScope.launch {
+                val updatedTodo = todo.copy(isPinned = !todo.isPinned)
+                repository.insertTodo(updatedTodo.toEntity())
+                _state.update { it.copy(todo = updatedTodo) }
+            }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
+
     }
 
     fun checkTask(task: TaskUi) {
-        viewModelScope.launch {
-            val updatedTask = task.copy(isDone = !task.isDone)
+        try {
             viewModelScope.launch {
-                repository.insertTask(updatedTask.toEntity())
+                val updatedTask = task.copy(isDone = !task.isDone)
+                viewModelScope.launch {
+                    repository.insertTask(updatedTask.toEntity())
+                }
             }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
+
     }
 
     fun onTitleChange(title: String) {
         val todo = _state.value.todo ?: return
-        viewModelScope.launch {
-            repository.insertTodo(todo.copy(title = title).toEntity())
+        try {
+            viewModelScope.launch {
+                repository.insertTodo(todo.copy(title = title).toEntity())
+            }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
         _state.update { it.copy(todo = todo.copy(title = title)) }
     }
@@ -85,11 +113,16 @@ class TaskViewModel @Inject constructor(
     fun onLabelChange(label: String) {
         _state.update { it.copy(todo = it.todo?.copy(label = label)) }
         val updatedTodo = _state.value.todo?.copy(label = label) ?: return
-        viewModelScope.launch {
-            repository.insertTodo(updatedTodo.toEntity())
+        try {
+            viewModelScope.launch {
+                repository.insertTodo(updatedTodo.toEntity())
+            }
+        }catch (e: Exception){
+            _state.update { it.copy(error = e.message) }
         }
-    }
 
+
+    }
 }
 
 

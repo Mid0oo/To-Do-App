@@ -79,8 +79,13 @@ class HomeViewModel @Inject constructor(
     fun onSelectedTab(tab: TodoTabs){
         _selectedTab.value = tab
     }
-    suspend fun insertTodo(todo: TodoEntity): Long {
-           return repository.insertTodo(todo)
+    fun addNewTodo(onInsert: (Long) -> Unit){
+        viewModelScope.launch {
+            val newTodo = TodoEntity(title = "Title", isPinned = false)
+            val id = repository.insertTodo(newTodo)
+            onInsert(id)
+
+        }
     }
 
 }

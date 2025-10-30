@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,10 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.mytrainning.R
-import com.example.to_doapp.data.TodoEntity
 import com.example.to_doapp.model.TodoUi
 import com.example.to_doapp.ui.TodoTabs
 import com.example.to_doapp.ui.components.EmptyState
@@ -30,40 +29,34 @@ import com.example.to_doapp.ui.components.ListCard
 import com.example.to_doapp.ui.components.LogoAndSearch
 import com.example.to_doapp.ui.components.NewListButton
 import com.example.to_doapp.ui.components.TodoFloatingButton
-import kotlinx.coroutines.launch
+
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
 ){
-    val state = viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
     val selectedTab = viewModel.selectedTab.collectAsState()
     Scaffold(
         floatingActionButton = {
             TodoFloatingButton(
                 onClick = {
-                    viewModel.viewModelScope.launch {
-                        val newTodo = TodoEntity(title = "Title", isPinned = false)
-                        val id = viewModel.insertTodo(newTodo)
-                        navController.navigate("task/$id")
+                    viewModel.addNewTodo {
+                        navController.navigate("task/$it")
                     }
                 }
             )
         }
     ) { paddingValues ->
         HomeScreenContent(
-            allTodos = state.value.todoList,
-            pinnedTodos = state.value.pinnedList,
+            allTodos = state.todoList,
+            pinnedTodos = state.pinnedList,
             onSelectedTab = { viewModel.onSelectedTab(it) },
             selectedTab = selectedTab.value,
             onCardClick = { navController.navigate("task/$it") },
             onSearch = { navController.navigate("search") },
-            onInsertButtonClick = {viewModel.viewModelScope.launch {
-                val newTodo = TodoEntity(title = "Title", isPinned = false)
-                val id = viewModel.insertTodo(newTodo)
-                navController.navigate("task/$id")
-            }},
+            onInsertButtonClick = {viewModel.addNewTodo { navController.navigate("task/$it")}},
             modifier = Modifier.padding(paddingValues)
         )
     }

@@ -193,9 +193,7 @@ fun TaskScreenContent(
 fun TaskScreenPreview() {
     TaskScreenContent(
         title = "Self-care List",
-        tasks = listOf(
-
-        ),
+        tasks = listOf(),
         selectedLabel = Labels.PERSONAL,
         isPinned = true,
         onTitleChange = {},

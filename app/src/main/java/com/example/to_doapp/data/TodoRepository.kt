@@ -15,6 +15,5 @@ interface TodoRepository {
 
     suspend fun insertTask(task: TaskEntity) : Long
 
-
     suspend fun deleteTask(task: TaskEntity)
 }
