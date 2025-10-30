@@ -40,13 +40,19 @@ fun HomeScreen(
     val selectedTab = viewModel.selectedTab.collectAsState()
     Scaffold(
         floatingActionButton = {
-            TodoFloatingButton(
-                onClick = {
-                    viewModel.addNewTodo {
-                        navController.navigate("task/$it")
+            val showFab = when (selectedTab.value) {
+                TodoTabs.All -> state.todoList.isNotEmpty()
+                TodoTabs.Pinned -> state.pinnedList.isNotEmpty()
+            }
+            if (showFab) {
+                TodoFloatingButton(
+                    onClick = {
+                        viewModel.addNewTodo {
+                            navController.navigate("task/$it")
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { paddingValues ->
         HomeScreenContent(

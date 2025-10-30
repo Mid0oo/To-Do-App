@@ -33,7 +33,7 @@ fun NewListButton(
             .width(125.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(Color.Black)
-            .clickable{onClick},
+            .clickable{onClick()},
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
 
