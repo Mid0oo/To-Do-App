@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
@@ -60,13 +59,11 @@ fun HomeScreen(
             selectedTab = selectedTab.value,
             onCardClick = { navController.navigate("task/$it") },
             onSearch = { navController.navigate("search") },
-            onInsertButtonClick = {
-                viewModel.viewModelScope.launch {
-                    val newTodo = TodoEntity(title = "Title", isPinned = false)
-                    val id = viewModel.insertTodo(newTodo)
-                    navController.navigate("task/$id")
-                }
-            },
+            onInsertButtonClick = {viewModel.viewModelScope.launch {
+                val newTodo = TodoEntity(title = "Title", isPinned = false)
+                val id = viewModel.insertTodo(newTodo)
+                navController.navigate("task/$id")
+            }},
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -81,7 +78,7 @@ fun HomeScreenContent(
     pinnedTodos: List<TodoUi>,
     onSelectedTab: (TodoTabs) -> Unit,
     selectedTab: TodoTabs,
-    onCardClick: (Int) -> Unit = {},
+    onCardClick: (Long) -> Unit = {},
     onInsertButtonClick: () -> Unit = {},
     onSearch: () -> Unit = {},
     modifier: Modifier = Modifier

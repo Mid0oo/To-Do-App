@@ -27,6 +27,7 @@ import com.example.to_doapp.ui.theme.Graphik
 
 @Composable
 fun TodoCheckbox(
+    text: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     onValueChange: (String) -> Unit,
@@ -74,8 +75,9 @@ fun TodoCheckbox(
             }
         }
         BasicTextField(
-            value = "To-Do",
+            value = text,
             onValueChange = {onValueChange(it)},
+            singleLine = true,
             textStyle = androidx.compose.ui.text.TextStyle(
                 color = Color.Black,
                 fontSize = 14.sp,
@@ -96,6 +98,7 @@ fun TodoCheckBoxPreview(){
     TodoCheckbox(
         checked = true,
         onCheckedChange = {},
-        onValueChange = {}
+        onValueChange = {},
+        text = "To-Do"
     )
 }

@@ -47,16 +47,17 @@ fun ListCard(
             color = Color.Black,
             fontFamily = Graphik,
             fontWeight = FontWeight.Medium,
-            fontSize = 20.sp
+            maxLines = 1,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(bottom = 14.dp)
         )
         Box(
             modifier = Modifier
-                .padding(top = 14.dp)
-                .height(16.dp)
+                .height(20.dp)
                 .clip(shape = RoundedCornerShape(4.dp))
                 .background(color = Color.Black),
-            contentAlignment = Alignment.Center
-
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = label,
@@ -64,8 +65,9 @@ fun ListCard(
                 fontFamily = Graphik,
                 fontWeight = FontWeight.Medium,
                 fontSize = 7.sp,
+                maxLines = 1,
                 modifier = Modifier
-                    .padding(horizontal = 7.dp)
+                    .padding(horizontal = 8.dp)
             )
         }
     }

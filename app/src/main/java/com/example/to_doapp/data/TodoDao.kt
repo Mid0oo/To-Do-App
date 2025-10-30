@@ -2,6 +2,8 @@ package com.example.to_doapp.data
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -24,7 +26,7 @@ interface TodoDao {
     fun getTodoById(id: Long): Flow<List<TodoWithTasks>>
 
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodo(todo: TodoEntity) : Long
 
 

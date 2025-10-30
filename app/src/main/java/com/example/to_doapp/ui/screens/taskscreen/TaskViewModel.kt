@@ -2,13 +2,15 @@ package com.example.to_doapp.ui.screens.taskscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.to_doapp.data.TaskEntity
 import com.example.to_doapp.data.TodoRepository
-import com.example.to_doapp.data.TodoWithTasks
+import com.example.to_doapp.model.TaskUi
+import com.example.to_doapp.model.toEntity
+import com.example.to_doapp.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,29 +21,75 @@ class TaskViewModel @Inject constructor(
     private val _state = MutableStateFlow(TaskScreenState())
     val state: StateFlow<TaskScreenState> = _state.asStateFlow()
 
-    private val _todo = MutableStateFlow<TodoWithTasks?>(null)
-    val todo: StateFlow<TodoWithTasks?> = _todo.asStateFlow()
 
     fun loadTodo(id: Long) {
         viewModelScope.launch {
             repository.getTodoById(id).collect { todo ->
-                _todo.value = todo.firstOrNull()
+                val todo = todo.firstOrNull()?.toUi()
+                _state.update { it.copy(todo = todo) }
             }
         }
     }
 
-    fun insertTask(task: TaskEntity) {
+    fun addTask() {
+        val todo = _state.value.todo ?: return
+        val newTask = TaskUi(
+            id = 0L,
+            todoId = todo.id,
+            title = "",
+            isDone = false
+        )
         viewModelScope.launch {
-            repository.insertTask(task)
+            repository.insertTask(newTask.toEntity())
         }
     }
 
-    fun pinTodo(todo: TodoWithTasks) {
+    fun updateTask(task: TaskUi) {
         viewModelScope.launch {
-            val updatedTodo = todo.copy(todo = todo.todo.copy(isPinned = !todo.todo.isPinned))
-            repository.insertTodo(updatedTodo.todo)
+            state.value.todo?.let { todo ->
+                val updatedTasks = todo.tasks.map {
+                    if (it.id == task.id) task else it
+                }
+                _state.update { it.copy(todo = todo.copy(tasks = updatedTasks)) }
+            }
+            repository.insertTask(task.toEntity())
         }
     }
 
+    fun pinTodo() {
+        val todo = state.value.todo ?: return
+        viewModelScope.launch {
+            val updatedTodo = todo.copy(isPinned = !todo.isPinned)
+            repository.insertTodo(updatedTodo.toEntity())
+            _state.update { it.copy(todo = updatedTodo) }
+        }
+    }
+
+    fun checkTask(task: TaskUi) {
+        viewModelScope.launch {
+            val updatedTask = task.copy(isDone = !task.isDone)
+            viewModelScope.launch {
+                repository.insertTask(updatedTask.toEntity())
+            }
+        }
+    }
+
+    fun onTitleChange(title: String) {
+        val todo = _state.value.todo ?: return
+        viewModelScope.launch {
+            repository.insertTodo(todo.copy(title = title).toEntity())
+        }
+        _state.update { it.copy(todo = todo.copy(title = title)) }
+    }
+
+    fun onLabelChange(label: String) {
+        _state.update { it.copy(todo = it.todo?.copy(label = label)) }
+        val updatedTodo = _state.value.todo?.copy(label = label) ?: return
+        viewModelScope.launch {
+            repository.insertTodo(updatedTodo.toEntity())
+        }
+    }
 
 }
+
+
