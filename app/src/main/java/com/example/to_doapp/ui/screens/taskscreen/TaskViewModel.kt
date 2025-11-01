@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -116,6 +117,18 @@ class TaskViewModel @Inject constructor(
                 repository.insertTodo(updatedTodo.toEntity())
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message) }
+            }
+        }
+    }
+
+    fun deleteIfEmpty(todoId: Long, title: String, tasksCount: Int) {
+        viewModelScope.launch {
+            if (title == "Title" && tasksCount == 0) {
+                val todoWithTasksList = repository.getTodoById(todoId).firstOrNull()
+                val todoEntity = todoWithTasksList?.firstOrNull()?.todo
+                if (todoEntity != null) {
+                    repository.deleteTodo(todoEntity)
+                }
             }
         }
     }

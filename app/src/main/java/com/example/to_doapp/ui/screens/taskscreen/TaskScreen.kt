@@ -1,5 +1,6 @@
 package com.example.to_doapp.ui.screens.taskscreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +41,16 @@ fun TaskScreen(
 
     LaunchedEffect(todoId) {
         viewModel.loadTodo(todoId)
+    }
+    BackHandler {
+        uiState.todo?.let { todo ->
+            viewModel.deleteIfEmpty(
+                todoId = todoId,
+                title = todo.title,
+                tasksCount = todo.tasks.size
+            )
+        }
+        navController.popBackStack()
     }
 
     Scaffold(
