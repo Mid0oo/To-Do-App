@@ -13,11 +13,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.key.Key.Companion.Backspace
+import androidx.compose.ui.input.key.Key.Companion.Enter
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,8 +41,12 @@ fun TodoCheckbox(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     onValueChange: (String) -> Unit,
+    onDeleted: () -> Unit,
+    onEnter: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var currentText by remember { mutableStateOf(text) }
+
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -75,9 +89,10 @@ fun TodoCheckbox(
             }
         }
         BasicTextField(
-            value = text,
-            onValueChange = {onValueChange(it)},
-            singleLine = true,
+            value = currentText,
+            onValueChange = {
+                currentText = it
+                onValueChange(it) },
             textStyle = androidx.compose.ui.text.TextStyle(
                 color = Color.Black,
                 fontSize = 14.sp,
@@ -87,6 +102,24 @@ fun TodoCheckbox(
             ),
             modifier = Modifier
                 .padding(start = 10.dp)
+                .fillMaxWidth()
+                .onPreviewKeyEvent { event ->
+                    if (event.type == KeyEventType.KeyDown) {
+                        when (event.key) {
+                            Backspace -> {
+                                if (currentText.isBlank()) {
+                                    onDeleted()
+                                    true
+                                } else false
+                            }
+                            Enter -> {
+                                onEnter()
+                                true
+                            }
+                            else -> false
+                        }
+                    } else false
+                }
         )
     }
 }
@@ -99,6 +132,8 @@ fun TodoCheckBoxPreview(){
         checked = true,
         onCheckedChange = {},
         onValueChange = {},
-        text = "To-Do"
+        text = "To-Do",
+        onDeleted = {},
+        onEnter = {}
     )
 }

@@ -61,7 +61,7 @@ fun LabelSection(
         Row(
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             labels.forEach { label ->
                 val isSelected = label == selectedLabel

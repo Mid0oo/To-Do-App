@@ -67,6 +67,7 @@ fun TaskScreen(
                 onTaskTextChange = { updated -> viewModel.updateTask(updated) },
                 onAddTask = { viewModel.addTask() },
                 onPinClick = { viewModel.pinTodo() },
+                onDeleteTask = { viewModel.deleteTask(it) },
                 onLabelChange = { viewModel.onLabelChange(it) },
                 onBackClick = { navController.popBackStack() },
                 modifier = Modifier.padding(paddingValues)
@@ -87,6 +88,7 @@ fun TaskScreenContent(
     onAddTask: () -> Unit,
     onPinClick: () -> Unit,
     onLabelChange: (String) -> Unit,
+    onDeleteTask: (TaskUi) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -145,8 +147,10 @@ fun TaskScreenContent(
                         val updatedTask = task.copy(title = newText)
                         onTaskTextChange(updatedTask)
                     },
+                    onDeleted = { onDeleteTask(task) },
+                    onEnter = { onAddTask() },
                     text = task.title,
-                    modifier = Modifier.padding(vertical = 6.dp)
+                    modifier = Modifier.padding(vertical = 12.dp)
                 )
             }
 
@@ -154,7 +158,7 @@ fun TaskScreenContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(top = 8.dp)
+                        .padding(top = 6.dp)
                         .clickable { onAddTask() }
                 ) {
                     Box(
@@ -183,7 +187,9 @@ fun TaskScreenContent(
                     Text(
                         text = "To-do",
                         color = Color.Gray,
-                        fontSize = 16.sp
+                        fontSize = 14.sp,
+                        fontFamily = Graphik,
+                        fontWeight = FontWeight.Normal
                     )
                 }
             }
@@ -213,6 +219,7 @@ fun TaskScreenPreview() {
         onAddTask = {},
         onPinClick = {},
         onLabelChange = {},
-        onBackClick = {}
+        onBackClick = {},
+        onDeleteTask = {}
     )
 }

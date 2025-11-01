@@ -36,7 +36,7 @@ fun ListCard(
             .fillMaxWidth()
             .clip(shape = RoundedCornerShape(16.dp))
             .background(labelColor)
-            .border(shape = RoundedCornerShape(16.dp), color = Color.Black, width = 2.dp)
+            .border(shape = RoundedCornerShape(16.dp), color = Color.Black, width = 1.dp)
             .clickable { onClick() }
             .padding(horizontal = 22.dp)
             .padding(vertical = 17.dp),

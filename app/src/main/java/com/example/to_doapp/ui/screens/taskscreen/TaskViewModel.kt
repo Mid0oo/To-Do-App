@@ -125,13 +125,24 @@ class TaskViewModel @Inject constructor(
         viewModelScope.launch {
             if (title == "Title" && tasksCount == 0) {
                 val todoWithTasksList = repository.getTodoById(todoId).firstOrNull()
-                val todoEntity = todoWithTasksList?.firstOrNull()?.todo
-                if (todoEntity != null) {
-                    repository.deleteTodo(todoEntity)
+                val todoUi = todoWithTasksList?.firstOrNull()?.toUi()
+                todoUi?.let {
+                    repository.deleteTodo(it.toEntity())
                 }
             }
         }
     }
+    fun deleteTask(task: TaskUi) {
+        viewModelScope.launch {
+            try {
+                repository.deleteTask(task.toEntity())
+                loadTodo(task.todoId)
+            } catch (e: Exception) {
+                _state.update { it.copy(error = e.message) }
+            }
+        }
+    }
+
 }
 
 

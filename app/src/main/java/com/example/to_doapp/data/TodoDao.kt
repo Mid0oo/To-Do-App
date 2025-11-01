@@ -25,14 +25,11 @@ interface TodoDao {
     @Query("SELECT * FROM todo_table WHERE id = :id")
     fun getTodoById(id: Long): Flow<List<TodoWithTasks>>
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodo(todo: TodoEntity) : Long
 
-
     @Upsert
     suspend fun insertTask(task: TaskEntity) : Long
-
 
     @Delete
     suspend fun deleteTodo(todo: TodoEntity)
