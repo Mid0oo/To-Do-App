@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.to_doapp.data.TodoEntity
 import com.example.to_doapp.data.TodoRepository
+import com.example.to_doapp.model.TodoUi
+import com.example.to_doapp.model.toEntity
 import com.example.to_doapp.model.toUi
 import com.example.to_doapp.ui.TodoTabs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,6 +86,17 @@ class HomeViewModel @Inject constructor(
             val newTodo = TodoEntity(title = "Title", isPinned = false)
             val id = repository.insertTodo(newTodo)
             onInsert(id)
+
+        }
+    }
+
+    fun deleteTodo(todo: TodoUi){
+        viewModelScope.launch {
+            try {
+                repository.deleteTodo(todo.toEntity())
+            }catch (e: Exception){
+                _state.value = state.value.copy(error = e.message)
+            }
 
         }
     }

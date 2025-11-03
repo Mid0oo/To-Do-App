@@ -64,6 +64,7 @@ fun HomeScreen(
             selectedTab = selectedTab.value,
             onCardClick = { navController.navigate("task/$it") },
             onSearch = { navController.navigate("search") },
+            onDelete = { viewModel.deleteTodo(it) },
             onInsertButtonClick = {viewModel.addNewTodo { navController.navigate("task/$it")}},
             modifier = Modifier.padding(paddingValues)
         )
@@ -82,6 +83,7 @@ fun HomeScreenContent(
     onCardClick: (Long) -> Unit = {},
     onInsertButtonClick: () -> Unit = {},
     onSearch: () -> Unit = {},
+    onDelete: (TodoUi) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -135,6 +137,7 @@ fun HomeScreenContent(
                                     title = it.title,
                                     label = it.label,
                                     onClick = {onCardClick(it.id)},
+                                    onDelete = {onDelete(it)},
                                     modifier = Modifier
                                         .padding(horizontal = 24.dp)
                                         .padding(bottom = 18.dp)
@@ -166,6 +169,7 @@ fun HomeScreenContent(
                                     title = it.title,
                                     label = it.label,
                                     onClick = {onCardClick(it.id)},
+                                    onDelete = {onDelete(it)},
                                     modifier = Modifier
                                         .padding(horizontal = 24.dp)
                                         .padding(bottom = 18.dp)

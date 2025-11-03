@@ -90,6 +90,7 @@ class TaskViewModel @Inject constructor(
                 val updatedTask = task.copy(isDone = !task.isDone)
                 viewModelScope.launch {
                     repository.insertTask(updatedTask.toEntity())
+                    loadTodo(task.todoId)
                 }
             } catch (e: Exception) {
                 _state.update { it.copy(error = e.message) }

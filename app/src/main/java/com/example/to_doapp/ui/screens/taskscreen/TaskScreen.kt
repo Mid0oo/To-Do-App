@@ -69,7 +69,13 @@ fun TaskScreen(
                 onPinClick = { viewModel.pinTodo() },
                 onDeleteTask = { viewModel.deleteTask(it) },
                 onLabelChange = { viewModel.onLabelChange(it) },
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
+                    viewModel.deleteIfEmpty(
+                        todoId,
+                        todo.title,
+                        todo.tasks.size
+                    )
+                    navController.popBackStack() },
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -98,7 +104,6 @@ fun TaskScreenContent(
             .background(Color.White)
             .padding(24.dp)
     ) {
-        // 🔹 Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
